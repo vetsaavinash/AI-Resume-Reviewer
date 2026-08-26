@@ -98,8 +98,8 @@ Use this date when interpreting all dates in the resume.
 14. If an activity's end date is before the current date, classify it
     as COMPLETED.
 
-15. If the current date falls within an activity's date range, classify
-    it as ONGOING.
+15. If the current date falls within an activity's date range, classify it
+    as ONGOING.
 
 16. If the activity starts after the current date, classify it as
     UPCOMING.
@@ -506,7 +506,13 @@ Additional output rules:
 """
 
     # Send prompt to Gemini
-    response = model.generate_content(prompt)
+    response = model.generate_content(
+        prompt,
+        generation_config=genai.types.GenerationConfig(
+            temperature=0.2,
+            max_output_tokens=1200
+        )
+    )
 
     # Get response text
     text = response.text.strip()
