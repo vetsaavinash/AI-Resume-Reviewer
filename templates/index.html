@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Resume Reviewer</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+
+<body class="bg-light">
+
+
+<div class="container py-5">
+
+
+    <!-- Hero Section -->
+
+    <div class="text-center mb-5">
+
+        <div class="mb-3">
+            <i class="fas fa-file-circle-check text-primary"
+               style="font-size: 55px;"></i>
+        </div>
+
+        <h1 class="fw-bold display-5">
+            AI Resume Reviewer
+        </h1>
+
+        <p class="text-muted fs-5 mt-3">
+            Analyze your resume and understand how well it matches
+            today's job opportunities.
+        </p>
+
+    </div>
+
+
+    <!-- Feature Cards -->
+
+    <div class="row justify-content-center g-4">
+
+
+        <!-- Resume Analyzer -->
+
+        <div class="col-lg-5 col-md-6">
+
+            <div class="card h-100 shadow-sm border-0 p-4">
+
+                <div class="text-center mb-3">
+
+                    <i class="fas fa-file-lines text-primary"
+                       style="font-size: 42px;"></i>
+
+                </div>
+
+                <h3 class="text-center fw-bold">
+                    Resume Analyzer
+                </h3>
+
+                <p class="text-muted text-center mt-3">
+                    Upload your resume and get an AI-powered evaluation
+                    of its ATS readiness, strengths, weaknesses and
+                    improvement suggestions.
+                </p>
+
+                <div class="mt-auto pt-3">
+
+                    <a
+                        href="{{ url_for('resume_analyzer') }}"
+                        class="btn btn-primary w-100 py-2">
+
+                        <i class="fas fa-magnifying-glass me-2"></i>
+                        Analyze Resume
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- JD Matcher -->
+
+        <div class="col-lg-5 col-md-6">
+
+            <div class="card h-100 shadow-sm border-0 p-4">
+
+                <div class="text-center mb-3">
+
+                    <i class="fas fa-briefcase text-success"
+                       style="font-size: 42px;"></i>
+
+                </div>
+
+                <h3 class="text-center fw-bold">
+                    Resume vs Job Description
+                </h3>
+
+                <p class="text-muted text-center mt-3">
+                    Compare your resume with a specific job description
+                    and discover your match score, matching skills and
+                    missing requirements.
+                </p>
+
+                <div class="mt-auto pt-3">
+
+                    <a
+                        href="{{ url_for('jd_match') }}"
+                        class="btn btn-success w-100 py-2">
+
+                        <i class="fas fa-code-compare me-2"></i>
+                        Compare with Job
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Simple Footer -->
+
+    <div class="text-center mt-5">
+
+        <p class="text-muted small">
+            AI-powered resume analysis for smarter job applications
+        </p>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

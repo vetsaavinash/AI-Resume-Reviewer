@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume vs Job Description</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome (required for comparison & spinner icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4">
+        Resume vs Job Description
+    </h2>
+
+    <div class="card shadow p-4">
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+            onsubmit="showLoading()">
+
+            <label class="form-label fw-bold">
+                Upload Resume
+            </label>
+
+            <input
+                type="file"
+                name="resume"
+                class="form-control"
+                accept=".pdf"
+                required>
+
+            <br>
+
+            <label class="form-label fw-bold">
+                Paste Job Description
+            </label>
+
+            <textarea
+                name="job_description"
+                class="form-control"
+                rows="8"
+                placeholder="Paste Job Description here..."
+                required></textarea>
+
+            <button
+                type="submit"
+                id="compareBtn"
+                class="btn btn-success mt-4 w-100 py-2">
+
+                <i class="fas fa-code-compare me-2" id="compareIcon"></i>
+
+                <span id="compareText">
+                    Compare Resume
+                </span>
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- Loading State Script -->
+<script>
+function showLoading() {
+
+    const button = document.getElementById("compareBtn");
+    const text = document.getElementById("compareText");
+    const icon = document.getElementById("compareIcon");
+
+    button.disabled = true;
+
+    icon.className = "fas fa-spinner fa-spin me-2";
+
+    text.textContent = "Comparing Resume... Please wait";
+
+}
+</script>
+
+</body>
+</html>
