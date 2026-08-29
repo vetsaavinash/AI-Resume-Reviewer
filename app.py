@@ -1,4 +1,5 @@
 import os
+import json
 from flask import Flask, render_template, request
 from utils.pdf_reader import extract_text
 from utils.ai import analyze_resume
@@ -32,20 +33,20 @@ def resume_analyzer():
 
             # 1. Structure the extracted text
             structured_resume = structure_resume(text)
-            #print(json.dumps(structured_resume, indent=4))
+            print(json.dumps(structured_resume, indent=4))
 
             # 2. Validate against ATS checks
             ats_result = validate_resume(structured_resume)
-            """print("\nATS VALIDATION:")
-            print(ats_result)"""
+            print("\nATS VALIDATION:")
+            print(ats_result)
 
             # 3. Perform final AI analysis
             result = analyze_resume(
                 structured_resume,
                 ats_result
             )
-            """print("\nFINAL AI ANALYSIS:")
-            print(json.dumps(result, indent=4))"""
+            print("\nFINAL AI ANALYSIS:")
+            print(json.dumps(result, indent=4))
 
             return render_template("result.html", result=result)
 
