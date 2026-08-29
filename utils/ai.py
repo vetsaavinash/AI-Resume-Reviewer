@@ -1,23 +1,21 @@
 import os
 import json
 from datetime import date
-
-import google.generativeai as genai
 from dotenv import load_dotenv
-
+from groq import Groq
 
 # Load environment variables
 load_dotenv()
 
-# Configure Gemini
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+api_key = os.getenv("GROQ_API_KEY")
 
-# Gemini model
-model = genai.GenerativeModel("gemini-2.5-flash")
+if not api_key:
+    raise ValueError("GROQ_API_KEY not found in .env file")
+
+client = Groq(api_key=api_key)
 
 
 def analyze_resume(resume, ats_validation):
-
     # Get the real current date automatically
     current_date = date.today().isoformat()
 
@@ -90,7 +88,6 @@ Use this date when interpreting all dates in the resume.
 12. Compare all experience and internship dates with the current date.
 
 13. Classify dated activities as:
-
    - Completed
    - Ongoing
    - Upcoming
@@ -129,7 +126,6 @@ Use this date when interpreting all dates in the resume.
     employment.
 
 25. Examine each experience entry and determine whether it is:
-
    - Full-time employment
    - Part-time employment
    - Internship
@@ -215,7 +211,6 @@ Use this date when interpreting all dates in the resume.
 38. Evaluate the actual ATS-friendliness of the resume.
 
 Consider:
-
    - section structure
    - readability
    - contact information
@@ -385,7 +380,6 @@ Consider:
 83. Prioritize the most useful resume improvements.
 
 84. Suggestions may include things such as:
-
    - adding measurable results to project bullets
    - adding responsibilities to internships
    - explicitly listing technologies already demonstrated in projects
@@ -505,23 +499,61 @@ Additional output rules:
 - Never fill empty sections with invented information.
 """
 
-    # Send prompt to Gemini
-    response = model.generate_content(prompt)
+    response = client.chat.completions.create(
+        model="openai/gpt-oss-20b",
+        messages=[
+            {
+                "role": "system",
+                "content": """
+You are a professional ATS resume evaluator.
+Return ONLY valid JSON.
+Never use markdown.
+Never use code fences.
+Do not include explanations outside JSON.
+Make sure the JSON is complete before finishing.
+""",
+            },
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0.2,
+        max_completion_tokens=3000,
+    )
 
-    # Get response text
-    text = response.text.strip()
+    text = response.choices[0].message.content.strip()
 
-    # Remove Markdown code fences if Gemini adds them
+    if not text:
+        raise ValueError("Empty response received from Groq")
+
+    print("\n============================================================")
+    print("AI RAW RESPONSE:")
+    print(text)
+    print("============================================================\n")
+
+    # Remove markdown fences
     if text.startswith("```json"):
         text = text[7:]
-
-    if text.startswith("```"):
+    elif text.startswith("```"):
         text = text[3:]
-
     if text.endswith("```"):
         text = text[:-3]
-
     text = text.strip()
 
-    # Convert Gemini JSON response into Python dictionary
-    return json.loads(text)
+    # Extract JSON object safely
+    start = text.find("{")
+    end = text.rfind("}")
+    if start == -1 or end == -1 or end <= start:
+        raise ValueError("Valid JSON boundaries not found")
+    text = text[start : end + 1]
+
+    try:
+        result = json.loads(text)
+        print("\nAI ANALYSIS COMPLETED SUCCESSFULLY\n")
+        return result
+    except json.JSONDecodeError as e:
+        print("\n============================================================")
+        print("AI ANALYSIS JSON ERROR:")
+        print(repr(e))
+        print("\nRAW TEXT:")
+        print(text)
+        print("============================================================\n")
+        raise ValueError("AI returned invalid or incomplete JSON. Try again.")
